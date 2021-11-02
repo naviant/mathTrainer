@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>EngTrainer</title>
+<style>
+    body{
+        height: 95%;
+        width: 95%;
+        position: absolute;
+    }
+    #main{
+        
+        border: solid red 1px;
+        width: 100%;
+        max-width: 100mm;
+        min-width: 60mm;
+        background-color: azure;
+        margin: auto;
+        height: 50%;
+        min-height: 100mm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+    }
+    #workSpace{
+        padding: 5%;
+        height: 50%;
+        width: 80%;
+        background-color: white;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10vw;
+    }
+    li{
+        border-top: 1px solid gray;
+    }
+    button{
+        width: 20px;
+        height: 20px;
+    }
+</style>
+</head>
+<body>
+<div id='main'>
+<div id='workSpace'></div>
+        
+</div>
+</body>
+<script>
+//******
+//    получаем 85% ширины блока (для полей по краям), делим на 9 (кол-во символов слова) , зaдаем font-size блока 
+    let space=document.getElementById('workSpace');
+    let lenSpace=Math.round(space.clientWidth*0.85);
+    let size=Math.round(lenSpace/9);
+    space.style.fontSize=`${size}px`;
+//******
+    space.addEventListener('click',main);
+    function log(e){
+        console.log(e);
+    }
+    
+    let f=0;
+    let answer;
+    let sign=['\u00D7','\u00F7','+','-'];
+    let op;
+function main(){
+    if(f==0){
+        nums=[Math.round(Math.random()*100),Math.round(Math.random()*100)];
+        op=Math.round(Math.random()*3);
+        switch(op){
+            case 0:
+                answer=nums[0]*nums[1];
+                break;
+            case 1:
+                nums[2]=nums[0]*nums[1];
+                answer=nums[0];
+                nums[0]=nums[2];
+                break;
+            case 2:
+                answer=nums[0]+nums[1];
+                break;
+            case 3:
+                nums[2]=nums[0]+nums[1];
+                answer=nums[0];
+                nums[0]=nums[2];
+                break;
+        }
+        space.textContent=`${nums[0]}${sign[op]}${nums[1]}`;
+        f=1;
+    }
+    else{
+        space.textContent=`${answer}`
+        f=0
+    }
+    
+}
+main();
+
+    
+</script>
+</html>

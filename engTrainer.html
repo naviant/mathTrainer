@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>EngTrainer</title>
+<style>
+    body{
+        height: 95%;
+        width: 95%;
+        position: absolute;
+    }
+    #main{
+        
+        border: solid red 1px;
+        width: 100%;
+        max-width: 100mm;
+        min-width: 60mm;
+        background-color: azure;
+        margin: auto;
+        height: 50%;
+        min-height: 100mm;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+    }
+    #workSpace{
+        padding: 5%;
+        height: 50%;
+        width: 80%;
+        background-color: white;
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10vw;
+    }
+    li{
+        border-top: 1px solid gray;
+    }
+    button{
+        width: 20px;
+        height: 20px;
+    }
+</style>
+</head>
+<body>
+<div id='main'>
+    <div id='title'></div>
+    <div id='gear'></div>
+    <div id='workSpace'></div>
+        
+</div>
+<ol id='ol' start='0'></ol>
+</body>
+<script>
+//    получаем 90% ширины блока (для полей по краям), делим на кол-во символов слова, зaдаем font-size блока 
+    let space=document.getElementById('workSpace');
+    let lenSpace=Math.round(space.clientWidth*0.85);
+// лучше определить размер шрифта для слова в 10 символов
+    let size=Math.round(lenSpace/9);
+    space.style.fontSize=`${size}px`;
+//    console.log(space.style.fontSize)
+//    space.textContent=w;
+    space.addEventListener('click',main);
+    let f=0;//ru 
+    function log(e){
+        console.log(e);
+    }
+    
+//let wordsList=['I','You','He','She','We','You','They','Я','Ты','Он','Она','Мы','Вы','Они','take','takes','took','will take','беру','берёшь','берёт','берёт','берём','берёте','берут','брал','брал','брал','брала','брали','брали','брали','буду брать','будешь брать','будет брать','будет брать','будем брать','будете брать','будут брать']; 
+let pronouns=['I','You','He','She','We','You','They','Я','Ты','Он','Она','Мы','Вы','Они'];
+let verbs=[['believe', 'believes', 'believed', 'will believe', 'верю', 'веришь', 'верит', 'верит', 'верим', 'верите', 'верят', 'верил', 'верил', 'верил', 'верила', 'верили', 'верили', 'верили', 'буду верить', 'будешь верить', 'будет верить', 'будет верить', 'будем верить', 'будете верить', 'будут верить'],['have', 'has', 'had', 'will have', 'имею', 'имеешь', 'имеет', 'имеет', 'имеем', 'имеете', 'имеют', 'имел', 'имел', 'имел', 'имела', 'имели', 'имели', 'имели', 'буду иметь', 'будешь иметь', 'будет иметь', 'будет иметь', 'будем иметь', 'будете иметь', 'будут иметь'],['say', 'says', 'said', 'will say', 'говорю', 'говоришь', 'говорит', 'говорит', 'говорим', 'говорите', 'говорят', 'говорил', 'говорил', 'говорил', 'говорила', 'говорили', 'говорили', 'говорили', 'буду говорить', 'будешь говорить', 'будет говорить', 'будет говорить', 'будем говорить', 'будете говорить', 'будут говорить'],['see', 'sees', 'saw', 'will see', 'вижу', 'видишь', 'видит', 'видит', 'видим', 'видите', 'видят', 'видел', 'видел', 'видел', 'видела', 'видели', 'видели', 'видели', 'буду видеть', 'будешь видеть', 'будет видеть', 'будет видеть', 'будем видеть', 'будете видеть', 'будут видеть'],['get', 'gets', 'got', 'will get', 'получаюсь', 'получаешься', 'получается', 'получается', 'получаемся', 'получаетесь', 'получаются', 'получался', 'получался', 'получался', 'получалась', 'получались', 'получались', 'получались', 'буду получаться', 'будешь получаться', 'будет получаться', 'будет получаться', 'будем получаться', 'будете получаться', 'будут получаться'],['want', 'wants', 'wanted', 'will want', 'хочу', 'хочешь', 'хочет', 'хочет', 'хотим', 'хотите', 'хотят', 'хотел', 'хотел', 'хотел', 'хотела', 'хотели', 'хотели', 'хотели', 'буду хотеть', 'будешь хотеть', 'будет хотеть', 'будет хотеть', 'будем хотеть', 'будете хотеть', 'будут хотеть'],['know', 'knows', 'knew', 'will know', 'знаю', 'знаешь', 'знает', 'знает', 'знаем', 'знаете', 'знают', 'знал', 'знал', 'знал', 'знала', 'знали', 'знали', 'знали', 'буду знать', 'будешь знать', 'будет знать', 'будет знать', 'будем знать', 'будете знать', 'будут знать'],['think', 'thinks', 'thought', 'will think', 'думаю', 'думаешь', 'думает', 'думает', 'думаем', 'думаете', 'думают', 'думал', 'думал', 'думал', 'думала', 'думали', 'думали', 'думали', 'буду думать', 'будешь думать', 'будет думать', 'будет думать', 'будем думать', 'будете думать', 'будут думать'],['take', 'takes', 'took', 'will take', 'беру', 'берёшь', 'берёт', 'берёт', 'берём', 'берёте', 'берут', 'брал', 'брал', 'брал', 'брала', 'брали', 'брали', 'брали', 'буду брать', 'будешь брать', 'будет брать', 'будет брать', 'будем брать', 'будете брать', 'будут брать']]
+    function mapping(pron,time,typeSt,verb){
+//    #pron= 0 - 6
+//    #verb= 0(take)
+//    #time= 0(present),1(past),2(future)
+//    #typeSt= 0 - 2 (statement, question, denial)
+let wordsList=pronouns.concat(verbs[verb])
+verb=0;
+let engPron=wordsList[pron]
+let ruPron=wordsList[pron+7]
+let engVerb;
+let ruVerb;
+    if (time==0){//present НАСТОЯЩЕЕ
+    engVerb=verb*19+14
+    if (typeSt==0){
+        if (pron==2 || pron==3){
+            engVerb+=1}
+    }
+    ruVerb=verb*19+14+4+pron}
+    if (time==1){ //past ПРОШЛОЕ
+        if (typeSt==0){engVerb=verb*19+14+2}
+        else{ engVerb=verb*19+14}
+        ruVerb=verb*19+14+4+7+pron}
+    if (time==2){ //future БУДУЩЕЕ
+        if(typeSt==0){engVerb=verb*19+14+3}
+        else {engVerb=verb*19+14}
+        ruVerb=verb*19+14+4+14+pron}
+    engVerb=wordsList[engVerb];
+    ruVerb=wordsList[ruVerb];
+    let qm='';
+    let ruPart='';
+    if (typeSt==1){ //question ВОПРОС
+        qm='?'
+        if (time==0){
+            if( pron==2 || pron==3){
+                engPron='Does '+engPron}
+            else{engPron='Do '+engPron}}
+        if (time==1){
+            engPron='Did '+engPron}
+        if (time==2){
+            engPron='Will '+engPron}}
+    if (typeSt==2){ //denial ОТРИЦАНИЕ
+        ruPart='не '
+        if (time==0){ //present
+            if( pron==2 || pron==3){
+                engPron=engPron+' doesn\'t'}
+            else{ engPron=engPron+' don\'t'}}
+        if (time==1){ //past
+            engPron=engPron+' did not'}
+        if (time==2){ //future
+            engPron=engPron+' will not'}}
+
+    return [engPron+' '+engVerb+qm,ruPron+' '+ruPart+ruVerb+qm]
+    }
+let contentList;
+function main(){
+    if(f==1){
+        space.textContent=contentList[0];
+        f=0;
+        return
+    }
+    let n=Math.trunc(Math.random()*63)
+    let v=Math.trunc(Math.random()*9)
+    let pron=Math.trunc(n/9);
+    let time=Math.trunc((n-pron*9)/3);
+    let typeSt=n-pron*9-time*3;
+    contentList=mapping(pron,time,typeSt,v);
+    if (f==0){
+        f=1;
+        space.textContent=contentList[1];
+    }
+}
+main();
+
+    
+</script>
+</html>
